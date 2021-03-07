@@ -1,0 +1,66 @@
+{
+  "name": "postcss-font-variation",
+  "version": "0.0.0",
+  "description": "PostCSS plugin adds font-variation property based on font declarations",
+  "keywords": [
+    "postcss",
+    "css",
+    "postcss-plugin",
+    "font",
+    "variation",
+    "font-variation"
+  ],
+  "scripts": {
+    "test": "jest-ci --coverage && eslint-ci ."
+  },
+  "author": "Mikhail Menshikov <ainop@ya.ru>",
+  "license": "MIT",
+  "repository": "ixth/postcss-font-variation",
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "peerDependencies": {
+    "postcss": "^8.1.5"
+  },
+  "devDependencies": {
+    "clean-publish": "^1.1.8",
+    "eslint": "^7.14.0",
+    "eslint-plugin-jest": "^24.1.3",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
+    "lint-staged": "^10.4.0",
+    "postcss": "^8.1.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "eslint --fix"
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2017
+    },
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:jest/recommended"
+    ],
+    "rules": {
+      "jest/expect-expect": "off"
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageThreshold": {
+      "global": {
+        "statements": 100
+      }
+    }
+  }
+}
