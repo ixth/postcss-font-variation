@@ -1,28 +1,54 @@
-module.exports = (opts = { }) => {
+const { getVariationWeight } = require('./axes/wght');
+const { getVariationItalic } = require('./axes/ital');
+const { getVariationWidth } = require('./axes/wdth');
+const parseFontShorthand = require('./lib/font-parser');
+const AxisParseError = require('./axes/axis-parse-error');
 
-  // Work with options here
+const variationGetters = {
+    font: (value) =>
+        parseFontShorthand(value)
+            .filter(([prop]) => ({}.hasOwnProperty.call(variationGetters, prop)))
+            .map(([prop, value]) => variationGetters[prop](value))
+            .join(' '),
+    'font-stretch': (value) => `--fws-wdth: ${getVariationWidth(value)};`,
+    'font-style': (value) => `--fws-ital: ${getVariationItalic(value)};`,
+    'font-weight': (value) => `--fws-wght: ${getVariationWeight(value)};`,
+};
 
-  return {
+module.exports = {
     postcssPlugin: 'postcss-font-variation',
-    /*
-    Root (root, postcss) {
-      // Transform CSS AST here
-    }
-    */
+    prepare: (result) => {
+        const affectedRules = new Set();
 
-    /*
-    Declaration (decl, postcss) {
-      // The faster way to find Declaration node
-    }
-    */
+        const handleDecl = (decl) => {
+            try {
+                decl.after(variationGetters[decl.prop](decl.value));
+            } catch (e) {
+                /* istanbul ignore if */
+                if (!(e instanceof AxisParseError)) {
+                    throw e;
+                }
+                decl.warn(result, e.message);
+            }
+            affectedRules.add(decl.parent);
+        };
 
-    /*
-    Declaration: {
-      color: (decl, postcss) {
-        // The fastest way find Declaration node if you know property name
-      }
-    }
-    */
-  }
-}
-module.exports.postcss = true
+        return {
+            Declaration: {
+                font: handleDecl,
+                'font-stretch': handleDecl,
+                'font-style': handleDecl,
+                'font-weight': handleDecl,
+            },
+
+            OnceExit: (root) => {
+                root.append(':root { --fws-ital: 0; --fws-wdth: 100; --fws-wght: 400; }');
+                affectedRules.forEach((node) => {
+                    node.append(
+                        `font-variation-settings: 'ital' var(--fws-ital), 'wdth' var(--fws-wdth), 'wght' var(--fws-wght);`
+                    );
+                });
+            },
+        };
+    },
+};

@@ -1,6 +1,6 @@
 {
   "name": "postcss-font-variation",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha",
   "description": "PostCSS plugin adds font-variation property based on font declarations",
   "keywords": [
     "postcss",
