@@ -1,0 +1,4 @@
+{
+  "*.js": "eslint --fix",
+  "package.json": ["sh -c 'yarn install'", "git add yarn.lock"]
+}

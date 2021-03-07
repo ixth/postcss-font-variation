@@ -11,7 +11,8 @@
     "font-variation"
   ],
   "scripts": {
-    "test": "jest-ci --coverage && eslint-ci ."
+    "test:ci": "jest --ci --coverage && eslint .",
+    "test:dev": "jest --watch"
   },
   "author": "Mikhail Menshikov <ainop@ya.ru>",
   "license": "MIT",
@@ -25,42 +26,16 @@
   "devDependencies": {
     "clean-publish": "^1.1.8",
     "eslint": "^7.14.0",
+    "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-jest": "^24.1.3",
-    "husky": "^4.3.0",
+    "eslint-plugin-prettier": "^3.3.1",
     "jest": "^26.4.2",
-    "lint-staged": "^10.4.0",
-    "postcss": "^8.1.5"
+    "lint-staged": "^10.5.2",
+    "postcss": "^8.1.5",
+    "prettier": "^2.2.1",
+    "simple-git-hooks": "^2.0.3"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.js": "eslint --fix"
-  },
-  "eslintConfig": {
-    "parserOptions": {
-      "ecmaVersion": 2017
-    },
-    "env": {
-      "node": true,
-      "es6": true
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:jest/recommended"
-    ],
-    "rules": {
-      "jest/expect-expect": "off"
-    }
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "coverageThreshold": {
-      "global": {
-        "statements": 100
-      }
-    }
+  "simple-git-hooks": {
+    "pre-commit": "yarn lint-staged"
   }
 }
